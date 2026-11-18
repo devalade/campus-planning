@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>TDD · 20 heures · Test-Driven Development</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span id="progressFill"></span></div>
+
+  <main id="stage" aria-live="polite">
+    <div id="deck"></div>
+  </main>
+
+  <nav class="controls" aria-label="Navigation de la présentation">
+    <button type="button" data-nav="prev" aria-label="Diapositive précédente">←</button>
+    <span id="counter" class="controls-count"><b>01</b><span class="slash"> / </span>26</span>
+    <button type="button" data-nav="next" aria-label="Diapositive suivante">→</button>
+    <span class="controls-sep" aria-hidden="true"></span>
+    <button type="button" data-action="fullscreen" aria-label="Plein écran" title="Plein écran (F)">⤢</button>
+    <button type="button" data-action="help" aria-label="Aide" title="Aide (?)">?</button>
+  </nav>
+
+  <div class="help" id="help" hidden role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="help-card">
+      <p class="kicker"><span></span>NAVIGATION</p>
+      <h2 id="help-title">Touches et gestes</h2>
+      <dl>
+        <dt>→</dt><dd>Diapositive suivante</dd>
+        <dt>←</dt><dd>Diapositive précédente</dd>
+        <dt>Espace</dt><dd>Diapositive suivante</dd>
+        <dt>Début</dt><dd>Première diapositive</dd>
+        <dt>Fin</dt><dd>Dernière diapositive</dd>
+        <dt>F</dt><dd>Plein écran</dd>
+        <dt>P</dt><dd>Imprimer ou exporter en PDF</dd>
+        <dt>?</dt><dd>Ouvrir cette aide</dd>
+        <dt>Échap</dt><dd>Fermer cette aide</dd>
+      </dl>
+      <button type="button" class="help-close" data-close>Fermer</button>
+    </div>
+  </div>
+
+  <script src="slides.js" defer></script>
+  <script src="deck.js" defer></script>
+</body>
+</html>

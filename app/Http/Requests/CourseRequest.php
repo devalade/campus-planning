@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\Room;
 use App\Enums\Weekday;
 use App\Models\Course;
+use App\Models\SpecialDay;
 use App\Models\User;
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
@@ -87,6 +88,12 @@ class CourseRequest extends FormRequest
                     return;
                 }
 
+                if ($this->fallsOnASpecialDay()) {
+                    $validator->errors()->add('day_of_week', 'Ce jour est spécial, aucun cours ne peut y être programmé.');
+
+                    return;
+                }
+
                 if ($this->overlapsAnotherCourse()) {
                     $validator->errors()->add('starts_at', 'Ce créneau chevauche un autre cours que vous enseignez déjà.');
                 }
@@ -102,6 +109,17 @@ class CourseRequest extends FormRequest
         $course = $this->route('course');
 
         return $course instanceof Course ? $course : null;
+    }
+
+    /**
+     * Determine if the chosen day is a special day of the current week.
+     */
+    private function fallsOnASpecialDay(): bool
+    {
+        $weekStart = Weekday::currentWeekStart();
+        $date = Weekday::from($this->integer('day_of_week'))->dateInWeekOf($weekStart);
+
+        return SpecialDay::inWeekOf($weekStart)->has($date->toDateString());
     }
 
     /**

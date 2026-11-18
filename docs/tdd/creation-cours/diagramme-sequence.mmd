@@ -1,0 +1,57 @@
+```mermaid
+sequenceDiagram
+    autonumber
+    actor P as Professeur
+    participant UI as Composant Livewire<br/>pages::calendar
+    participant Policy as CoursePolicy
+    participant DB as Base de données
+    participant Notif as CourseScheduleNotification
+    participant Mail as Serveur email
+
+    P->>UI: Ouvre la modale de création
+    P->>UI: Soumet le formulaire
+    activate UI
+
+    UI->>Policy: authorize('create', Course)
+    alt Utilisateur non professeur
+        Policy-->>UI: AuthorizationException
+        UI-->>P: 403 Accès refusé
+    else Professeur autorisé
+        Policy-->>UI: Autorisation accordée
+
+        UI->>UI: validate(title, room, dayOfWeek,<br/>startTime, endTime, studentIds)
+        alt Données invalides
+            UI-->>P: Erreurs de validation
+        else Données valides
+            UI->>DB: SELECT cours du professeur<br/>sur le même jour et le même créneau
+            DB-->>UI: Résultat de la recherche
+
+            alt Créneau déjà occupé
+                UI-->>P: Erreur "créneau déjà occupé"
+            else Créneau libre
+                UI->>DB: INSERT INTO courses
+                DB-->>UI: Cours créé
+                UI->>DB: SYNC course_student
+                DB-->>UI: Étudiants inscrits
+                UI->>DB: SELECT professeur et étudiants
+                DB-->>UI: Participants
+
+                UI->>Notif: Notification::send(participants, Created)
+                activate Notif
+                Notif->>Mail: Envoie l'email de création
+                alt Email envoyé
+                    Mail-->>Notif: OK
+                    Notif-->>UI: Notification envoyée
+                    UI-->>P: Toast succès et fermeture de la modale
+                else Email en échec
+                    Mail-->>Notif: Erreur SMTP
+                    Notif-->>UI: Exception
+                    UI->>UI: report(exception)
+                    UI-->>P: Toast avertissement, cours conservé
+                end
+                deactivate Notif
+            end
+        end
+    end
+    deactivate UI
+```

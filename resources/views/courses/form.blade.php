@@ -18,6 +18,11 @@
             <x-ui.text class="mt-1">
                 {{ __('Le professeur et les étudiants du groupe recevront un email.') }}
             </x-ui.text>
+            @if ($specialDays->isNotEmpty())
+                <x-ui.text class="mt-2 text-sm text-rose-600 dark:text-rose-400">
+                    {{ __('Certains jours de cette semaine sont spéciaux et ne peuvent pas être programmés.') }}
+                </x-ui.text>
+            @endif
         </div>
 
         <form
@@ -52,8 +57,13 @@
                     <x-ui.label for="day_of_week">{{ __('Jour') }}</x-ui.label>
                     <x-ui.select name="day_of_week">
                         @foreach (Weekday::schedulable() as $weekday)
-                            <x-ui.option value="{{ $weekday->value }}" :selected="$selectedDay === $weekday->value">
-                                {{ $weekday->label() }}
+                            @php($specialDay = $specialDays->get($weekday->dateInWeekOf($weekStart)->toDateString()))
+                            <x-ui.option
+                                value="{{ $weekday->value }}"
+                                :selected="$selectedDay === $weekday->value"
+                                :disabled="$specialDay !== null"
+                            >
+                                {{ $weekday->label() }}{{ $specialDay ? ' · '.$specialDay->label : '' }}
                             </x-ui.option>
                         @endforeach
                     </x-ui.select>

@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::anonymousComponentPath(resource_path('views/layouts'), 'layouts');
         View::addNamespace('pages', resource_path('views/pages'));
 
+        Gate::define('manage-special-days', fn (User $user): bool => $user->isAdmin());
         Gate::define('manage-groups', fn (User $user): bool => $user->isAdmin());
     }
 

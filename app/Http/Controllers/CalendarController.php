@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Weekday;
 use App\Models\Course;
+use App\Models\SpecialDay;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -20,6 +21,7 @@ class CalendarController extends Controller
         $user = $request->user();
 
         $weekStart = Weekday::currentWeekStart();
+        $specialDays = SpecialDay::inWeekOf($weekStart);
 
         $courses = Course::query()
             ->with(['professor', 'group'])
@@ -27,7 +29,7 @@ class CalendarController extends Controller
             ->orderBy('starts_at')
             ->get();
 
-        $days = collect(Weekday::schedulable())->map(function (Weekday $weekday) use ($weekStart, $courses): array {
+        $days = collect(Weekday::schedulable())->map(function (Weekday $weekday) use ($weekStart, $courses, $specialDays): array {
             $date = $weekday->dateInWeekOf($weekStart);
             $dayCourses = $courses->filter(fn (Course $course): bool => $course->day_of_week === $weekday)->values();
 
@@ -36,6 +38,7 @@ class CalendarController extends Controller
                 'weekday' => $weekday,
                 'courses' => $dayCourses,
                 'layout' => $this->layoutCourses($dayCourses),
+                'specialDay' => $specialDays->get($date->toDateString()),
             ];
         });
 

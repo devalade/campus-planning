@@ -7,6 +7,7 @@ use App\Enums\Weekday;
 use App\Http\Requests\CourseRequest;
 use App\Models\Course;
 use App\Models\Group;
+use App\Models\SpecialDay;
 use App\Models\User;
 use App\Notifications\CourseScheduleNotification;
 use Carbon\CarbonImmutable;
@@ -103,8 +104,12 @@ class CourseController extends Controller
      */
     private function form(Course $course): View
     {
+        $weekStart = Weekday::currentWeekStart();
+
         return view('courses.form', [
             'course' => $course,
+            'weekStart' => $weekStart,
+            'specialDays' => SpecialDay::inWeekOf($weekStart),
             'groups' => Group::query()->withCount('students')->orderBy('name')->get(),
         ]);
     }

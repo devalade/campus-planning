@@ -8,6 +8,7 @@
 
     if (auth()->user()->isAdmin()) {
         $links[__('Administration')] = [
+            ['route' => 'admin.special-days', 'label' => __('Jours spéciaux')],
             ['route' => 'admin.groups', 'label' => __('Groupes')],
         ];
     }

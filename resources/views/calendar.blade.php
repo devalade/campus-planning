@@ -55,6 +55,11 @@
                         <div class="mt-0.5 text-sm font-semibold text-zinc-900 dark:text-white">
                             {{ $day['date']->format('d/m') }}
                         </div>
+                        @if ($day['specialDay'])
+                            <div class="mt-1 inline-flex max-w-full items-center truncate rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-medium text-rose-700 dark:bg-rose-950/60 dark:text-rose-300" title="{{ $day['specialDay']->label }}">
+                                {{ $day['specialDay']->label }}
+                            </div>
+                        @endif
                     </div>
                 @endforeach
             </div>
