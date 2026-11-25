@@ -1,5 +1,3 @@
-@php use App\Enums\Weekday; @endphp
-
 <x-layouts::app :title="__('Jours spéciaux')">
 
 <section class="w-full space-y-6">
@@ -23,7 +21,7 @@
                     <div class="flex items-center justify-between gap-4 px-6 py-4">
                         <div>
                             <x-ui.text class="font-medium">
-                                {{ Weekday::fromDate($specialDay->date)->label() }} {{ $specialDay->date->format('d/m/Y') }}
+                                {{ date('d/m/Y', strtotime($specialDay->date)) }}
                             </x-ui.text>
                             <x-ui.text size="sm" class="mt-1">{{ $specialDay->label }}</x-ui.text>
                         </div>

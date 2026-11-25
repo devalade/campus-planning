@@ -26,11 +26,11 @@ class SpecialDayController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'date' => ['required', 'date', 'after_or_equal:today', 'unique:special_days,date'],
+            'date' => ['required', 'date_format:Y-m-d', 'after_or_equal:today', 'unique:special_days,date'],
             'label' => ['required', 'string', 'max:100'],
         ], [
             'date.required' => 'Choisissez une date.',
-            'date.date' => 'La date est invalide.',
+            'date.date_format' => 'La date est invalide.',
             'date.after_or_equal' => "La date doit être aujourd'hui ou plus tard.",
             'date.unique' => 'Ce jour spécial existe déjà.',
             'label.required' => 'Donnez un libellé au jour spécial.',

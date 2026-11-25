@@ -109,7 +109,7 @@ class CourseController extends Controller
         return view('courses.form', [
             'course' => $course,
             'weekStart' => $weekStart,
-            'specialDays' => SpecialDay::inWeekOf($weekStart),
+            'specialDays' => SpecialDay::inWeekOf($weekStart->toDateString()),
             'groups' => Group::query()->withCount('students')->orderBy('name')->get(),
         ]);
     }

@@ -21,7 +21,7 @@ class CalendarController extends Controller
         $user = $request->user();
 
         $weekStart = Weekday::currentWeekStart();
-        $specialDays = SpecialDay::inWeekOf($weekStart);
+        $specialDays = SpecialDay::inWeekOf($weekStart->toDateString());
 
         $courses = Course::query()
             ->with(['professor', 'group'])

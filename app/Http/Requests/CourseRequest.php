@@ -119,7 +119,7 @@ class CourseRequest extends FormRequest
         $weekStart = Weekday::currentWeekStart();
         $date = Weekday::from($this->integer('day_of_week'))->dateInWeekOf($weekStart);
 
-        return SpecialDay::inWeekOf($weekStart)->has($date->toDateString());
+        return SpecialDay::inWeekOf($weekStart->toDateString())->has($date->toDateString());
     }
 
     /**
